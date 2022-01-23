@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "959958341534",
+    "project_id": "onlineclass-ac2e1",
+    "storage_bucket": "onlineclass-ac2e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959958341534:android:e3a42cf1e5fcc296ed288f",
+        "android_client_info": {
+          "package_name": "com.example.onlineclass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959958341534-549ma27i6q64nk5k7mkk3vbo4g8de799.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVSQhM-XcI5B9Wgx9mQqJO-bwclekp8F4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959958341534-549ma27i6q64nk5k7mkk3vbo4g8de799.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

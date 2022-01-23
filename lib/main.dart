@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onlineclass/admin_screen.dart';
 import 'package:onlineclass/login_page.dart';
 import 'package:onlineclass/main_screen.dart';
 import 'package:onlineclass/profile_screens.dart';

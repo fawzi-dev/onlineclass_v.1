@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
           builder: (ctx, constraints) => Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-                cyan,
+                colorBack1,
                 grey0,
               ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
