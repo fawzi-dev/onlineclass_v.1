@@ -1,7 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:onlineclass/admin_screen/admin_main_screen.dart';
+import 'package:onlineclass/admin_screen/admin_stage_screen.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
@@ -11,6 +18,9 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
+  String _videoLink = "";
+  late File _video;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,35 +28,41 @@ class _AdminScreenState extends State<AdminScreen> {
       drawer: null,
       body: SafeArea(
         child: LayoutBuilder(
-          builder: (ctx, constraints) =>
-              SizedBox(
-                child: GridView(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  children: [
-                    AdminButtonCard(
-                      title: 'Add Video',
-                      onTap: () {},
-                      height: constraints.maxHeight * 0.2,
-                      paddingHorizontal: constraints.maxWidth * 0.03,
-                      paddingVertical: constraints.maxHeight * 0.03,
-                      icon: Icons.video_library_rounded,
-                      iconAndTextDiv: constraints.maxHeight * 0.02,
-                      iconSize: constraints.maxHeight * 0.1,
-                    ),
-                    AdminButtonCard(
-                      title: 'Add Student',
-                      onTap: () {},
-                      height: constraints.maxHeight * 0.2,
-                      paddingHorizontal: constraints.maxWidth * 0.03,
-                      paddingVertical: constraints.maxHeight * 0.03,
-                      icon: FontAwesomeIcons.userGraduate,
-                      iconAndTextDiv: constraints.maxHeight * 0.03,
-                      iconSize:constraints.maxHeight * 0.1,
-                    ),
-                  ],
-                ),
-              ),
+          builder: (ctx, constraints) => SizedBox(
+            child: GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                children: [
+                  AdminButtonCard(
+                    title: 'Videos',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                              const AdminStageScreen(),
+                        ),
+                      );
+                    },
+                    height: constraints.maxHeight * 0.2,
+                    paddingHorizontal: constraints.maxWidth * 0.03,
+                    paddingVertical: constraints.maxHeight * 0.03,
+                    icon: Icons.video_library_rounded,
+                    iconAndTextDiv: constraints.maxHeight * 0.02,
+                    iconSize: constraints.maxHeight * 0.1,
+                  ),
+                  AdminButtonCard(
+                    title: 'Add Student',
+                    onTap: () {},
+                    height: constraints.maxHeight * 0.2,
+                    paddingHorizontal: constraints.maxWidth * 0.03,
+                    paddingVertical: constraints.maxHeight * 0.03,
+                    icon: FontAwesomeIcons.userGraduate,
+                    iconAndTextDiv: constraints.maxHeight * 0.03,
+                    iconSize: constraints.maxHeight * 0.1,
+                  ),
+                ]),
+          ),
         ),
       ),
     );
@@ -62,7 +78,8 @@ class AdminButtonCard extends StatelessWidget {
     required this.paddingHorizontal,
     required this.paddingVertical,
     required this.icon,
-    required this.iconAndTextDiv, required this.iconSize,
+    required this.iconAndTextDiv,
+    required this.iconSize,
   }) : super(key: key);
 
   final String title;
@@ -76,7 +93,6 @@ class AdminButtonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(iconSize);
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: paddingHorizontal,

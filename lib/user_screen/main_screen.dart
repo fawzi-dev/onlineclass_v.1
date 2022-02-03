@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
-import 'drawer.dart';
+import 'package:onlineclass/drawer.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
