@@ -63,6 +63,7 @@ class AddTaskScreen extends StatelessWidget {
                   'Link': videoUrls,
                   'Name': videoTitle,
                 });
+                Navigator.pop(context);
               },
             ),
           ],
