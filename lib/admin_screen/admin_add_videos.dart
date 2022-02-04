@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+class AddVideoScreen extends StatelessWidget {
+  const AddVideoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

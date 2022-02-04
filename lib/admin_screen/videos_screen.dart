@@ -58,7 +58,7 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                   child: Container(
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: const AddTaskScreen(),
+                    child: const AddVideoScreen(),
                   ),
                 ),
               );
