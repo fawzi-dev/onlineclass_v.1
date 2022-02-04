@@ -33,7 +33,11 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
   }
 
   getData() async {
-    final videoLink = await _firestore.collection('Stage1').doc('cpp').collection('lessons').get();
+    final videoLink = await _firestore
+        .collection('Stage1')
+        .doc('cpp')
+        .collection('lessons')
+        .get();
     for (var video in videoLink.docs) {
       print(video.data());
     }
@@ -48,14 +52,15 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
           IconButton(
             onPressed: () {
               showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => SingleChildScrollView(
-                      child:Container(
-                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: const AddTaskScreen(),
-                      )
-                  )
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: const AddTaskScreen(),
+                  ),
+                ),
               );
             },
             icon: const Icon(Icons.add),
@@ -64,10 +69,16 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * 0.9,
         child: StreamBuilder<QuerySnapshot>(
-          stream: _firestore.collection('Stage1').doc('cpp').collection('lessons').snapshots(),
+          stream: _firestore
+              .collection('Stage1')
+              .doc('cpp')
+              .collection('lessons')
+              .snapshots(),
           builder: (ctx, snapshot) {
+            if(snapshot.hasData==false){
+              print('Error');
+            }
             if (snapshot.hasData) {
               final videoUrls = snapshot.data!.docs;
               List<VideoPlayer> videoInfo = [];
@@ -83,7 +94,6 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                 children: [
                   Flexible(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
                       child: ListView(children: videoInfo),
                     ),
                   ),
@@ -108,33 +118,36 @@ class VideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Link"+videoUrls);
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      margin: const EdgeInsets.all(2),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          YoutubePlayer(
-            controller: YoutubePlayerController(
-              initialVideoId: YoutubePlayer.convertUrlToId(videoUrls) as String,
-              flags: const YoutubePlayerFlags(
-                autoPlay: false,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            YoutubePlayer(
+              controller: YoutubePlayerController(
+                initialVideoId: YoutubePlayer.convertUrlToId(videoUrls) as String,
+                flags: const YoutubePlayerFlags(
+                  autoPlay: false,
+                ),
+              ),
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.blue,
+              progressColors: const ProgressBarColors(
+                  playedColor: Colors.blue, handleColor: Colors.blueAccent),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              color: darkBlue,
+              child: Center(
+                child: Text(
+                  videoTitle,
+                  style: kAdminSub,
+                ),
               ),
             ),
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.blue,
-            progressColors: const ProgressBarColors(
-                playedColor: Colors.blue, handleColor: Colors.blueAccent),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            color: darkBlue,
-            child: Center(
-              child: Text(videoTitle,style: kAdminSub,),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
