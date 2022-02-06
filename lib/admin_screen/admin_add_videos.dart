@@ -3,19 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddVideoScreen extends StatelessWidget {
-  const AddVideoScreen({Key? key}) : super(key: key);
+   AddVideoScreen({Key? key, required this.collectionId, required this.docsId}) : super(key: key);
+
+  final String collectionId;
+  final String docsId;
+  final regEx = RegExp(r"^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$");
+
 
   @override
   Widget build(BuildContext context) {
-
     final _firestore = FirebaseFirestore.instance;
     String? videoTitle;
     String? videoUrls;
 
+    print("Your collection ID is " + collectionId);
     return Container(
       color: const Color(0xff757575),
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -47,7 +52,9 @@ class AddVideoScreen extends StatelessWidget {
               autofocus: true,
               textAlign: TextAlign.center,
               onChanged: (newText) {
-                videoUrls = newText;
+                if(regEx.hasMatch(newText)){
+                  videoUrls = newText;
+                }
               },
             ),
             FlatButton(
@@ -59,11 +66,38 @@ class AddVideoScreen extends StatelessWidget {
               ),
               color: Colors.lightBlueAccent,
               onPressed: () {
-                _firestore.collection('Stage1').doc('cpp').collection('lessons').add({
-                  'Link': videoUrls,
-                  'Name': videoTitle,
-                });
-                Navigator.pop(context);
+               if(videoTitle == null || videoUrls==null){
+                 ScaffoldMessenger.of(context).showSnackBar(
+                   const SnackBar(
+                     content: Text(
+                       'Please input data correctly!',
+                       style: TextStyle(color: Colors.white),
+                     ),
+                     backgroundColor: Colors.black,
+                   ),
+                 );
+                 Navigator.pop(context);
+               }
+               else{
+                 _firestore
+                     .collection(collectionId)
+                     .doc(docsId)
+                     .collection('lessons')
+                     .add({
+                   'Link': videoUrls,
+                   'Name': videoTitle,
+                 });
+                 Navigator.pop(context);
+                 ScaffoldMessenger.of(context).showSnackBar(
+                   const SnackBar(
+                     content: Text(
+                       'Video Added',
+                       style: TextStyle(color: Colors.white),
+                     ),
+                     backgroundColor: Colors.black,
+                   ),
+                 );
+               }
               },
             ),
           ],

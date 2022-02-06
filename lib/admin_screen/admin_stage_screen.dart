@@ -25,7 +25,7 @@ class AdminStageScreen extends StatelessWidget {
                 StagesCard(
                     title: 'Stage 1',
                     onTap: () {
-                      Navigator.pushNamed(context, '/MainScreen');Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
@@ -38,7 +38,15 @@ class AdminStageScreen extends StatelessWidget {
                     height: constraints.maxHeight * height),
                 StagesCard(
                     title: 'Stage 2',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                          const AdminMainScreen(collection: "Stage2"),
+                        ),
+                      );
+                    },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
                     height: constraints.maxHeight * height),

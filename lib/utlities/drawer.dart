@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
-import 'constants/constants.dart';
+import '../constants/constants.dart';
 
 class Drawers extends StatelessWidget {
   const Drawers({

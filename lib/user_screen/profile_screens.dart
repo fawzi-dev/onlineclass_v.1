@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:onlineclass/constants/constants.dart';
-import 'package:onlineclass/drawer.dart';
+import 'package:onlineclass/utlities/drawer.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
 class ProfileScreen extends StatelessWidget {

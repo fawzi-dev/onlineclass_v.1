@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:onlineclass/admin_screen/videos_screen.dart';
+import 'package:onlineclass/user_screen/user_videos_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
 import 'package:onlineclass/utlities/drawer.dart';
 
-class AdminMainScreen extends StatefulWidget {
-  const AdminMainScreen({Key? key, required this.collection}) : super(key: key);
+class UserMainScreen extends StatefulWidget {
+  const UserMainScreen({Key? key,  this.collection}) : super(key: key);
 
-  final String collection;
+  final String? collection;
 
   @override
-  _AdminMainScreenState createState() => _AdminMainScreenState();
+  _UserMainScreenState createState() => _UserMainScreenState();
 }
 
-class _AdminMainScreenState extends State<AdminMainScreen> {
+class _UserMainScreenState extends State<UserMainScreen> {
   List<String> docs = [
     'cpp',
     'visualbasic',
@@ -49,7 +50,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (ctx) =>  AdminVideoScreen( collection: widget.collection,docs: docs[index],),
+                    builder: (ctx) =>  UserVideoScreen( collection: widget.collection as String,docs: docs[index],),
                   ),
                 );
               },

@@ -6,10 +6,8 @@ import 'package:onlineclass/utlities/colors.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:core';
 
-import 'admin_add_videos.dart';
-
-class AdminVideoScreen extends StatefulWidget {
-  const AdminVideoScreen(
+class UserVideoScreen extends StatefulWidget {
+  const UserVideoScreen(
       {Key? key, required this.collection, required this.docs})
       : super(key: key);
 
@@ -17,10 +15,10 @@ class AdminVideoScreen extends StatefulWidget {
   final String docs;
 
   @override
-  _AdminVideoScreenState createState() => _AdminVideoScreenState();
+  _UserVideoScreenState createState() => _UserVideoScreenState();
 }
 
-class _AdminVideoScreenState extends State<AdminVideoScreen> {
+class _UserVideoScreenState extends State<UserVideoScreen> {
   final _firestore = FirebaseFirestore.instance;
 
   @override
@@ -43,25 +41,7 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Videos'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: AddVideoScreen(collectionId: widget.collection,docsId: widget.docs,),
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          )
-        ],
+        title: const Text('Lessons'),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,

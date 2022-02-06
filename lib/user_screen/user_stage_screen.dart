@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
-class StageScreen extends StatelessWidget {
-  const StageScreen({Key? key}) : super(key: key);
+import 'user_main_screen.dart';
+
+class UserStageScreen extends StatelessWidget {
+  const UserStageScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +25,28 @@ class StageScreen extends StatelessWidget {
                 StagesCard(
                     title: 'Stage 1',
                     onTap: () {
-                      Navigator.pushNamed(context, '/MainScreen');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                          const UserMainScreen(collection: "Stage1"),
+                        ),
+                      );
                     },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
                     height: constraints.maxHeight * height),
                 StagesCard(
                     title: 'Stage 2',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                          const UserMainScreen(collection: "Stage2"),
+                        ),
+                      );
+                    },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
                     height: constraints.maxHeight * height),
