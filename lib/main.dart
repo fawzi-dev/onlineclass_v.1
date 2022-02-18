@@ -17,6 +17,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: const UserStageScreen(),
       initialRoute: '/',
       routes: {

@@ -26,10 +26,6 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      setState(() {});
-    });
   }
 
   @override
@@ -37,7 +33,7 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
     debugPrint(videoPlay);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lessons'),
+        title: Text(widget.docs + ' Lessons'),
       ),
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -55,10 +51,20 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
                 case ConnectionState.waiting:
                   return const Center(child: CircularProgressIndicator());
                 default:
-                  if (snapshot.hasError) {
-                    return const Center(child: Text('Some error occurred!'));
+                  if (snapshot.hasError || videoData!.isEmpty) {
+                    return const Center(
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.error_outline,
+                          size: 55,
+                        ),
+                        title: Text('Some error occurred!'),
+                        subtitle: Text(
+                            'Usually, this is because of internet connection \nor there is no uploaded video yet in the server.'),
+                      ),
+                    );
                   } else {
-                    for (var video in videoData!) {
+                    for (var video in videoData) {
                       final videoTitle = video.get('Name');
                       final videoUrls = video.get('Link');
                       listVideoTitle.add(videoTitle);
@@ -96,10 +102,10 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    playVideo();
+    getVideo();
   }
 
-  void playVideo() {
+  void getVideo() {
     setState(() {
       _controller = YoutubePlayerController(
         initialVideoId:
@@ -121,7 +127,9 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
         YoutubePlayerIFrame(
           controller: _controller,
         ),
-        const SizedBox(height: 10.0,),
+        const SizedBox(
+          height: 10.0,
+        ),
         Flexible(
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
@@ -132,7 +140,10 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                   () {
                     final videoIndex = widget.videoUrl.elementAt(index);
                     debugPrint(videoIndex);
-                    _controller.load(YoutubePlayerController.convertUrlToId(videoIndex) as String);
+                    _controller.load(
+                        YoutubePlayerController.convertUrlToId(videoIndex)
+                            as String);
+                    _controller.hideTopMenu();
                   },
                 );
               },
@@ -163,14 +174,23 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                           ),
                         ),
                         Flexible(
-                          child: Text(
-                            widget.videosList[index],
-                            style: videoTitleTextStyle,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.videosList[index],
+                                  style: videoTitleTextStyle,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.play_circle_filled_outlined,
                           color: Colors.amber,
+                          size: MediaQuery.of(context).size.height * 0.05,
                         )
                       ],
                     ),

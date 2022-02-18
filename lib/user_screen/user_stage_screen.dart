@@ -29,7 +29,7 @@ class UserStageScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const UserMainScreen(collection: "Stage1"),
+                          const UserMainScreen(collectionId: "Stage1"),
                         ),
                       );
                     },
@@ -43,7 +43,7 @@ class UserStageScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const UserMainScreen(collection: "Stage2"),
+                          const UserMainScreen(collectionId: "Stage2"),
                         ),
                       );
                     },
