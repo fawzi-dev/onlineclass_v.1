@@ -15,3 +15,4 @@ const kUserName = TextStyle(color: Colors.white60,fontSize: 14,fontWeight: FontW
 var kDrawerBtn = TextStyle(color: skyBlue,fontSize: 18,fontWeight: FontWeight.w600);
 const kProfileBtn = TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w400);
 const kAdminSub = TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w500);
+const videoTitleTextStyle = TextStyle(color: Colors.white,fontSize: 17);
