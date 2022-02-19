@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:onlineclass/user_screen/user_videos_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/drawer.dart';
+import 'package:onlineclass/utlities/getStoredString.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserMainScreen extends StatefulWidget {
-  const UserMainScreen({Key? key, this.collectionId}) : super(key: key);
+  const UserMainScreen({Key? key,}) : super(key: key);
 
-  final String? collectionId;
 
   @override
   _UserMainScreenState createState() => _UserMainScreenState();
@@ -15,25 +16,31 @@ class UserMainScreen extends StatefulWidget {
 
 class _UserMainScreenState extends State<UserMainScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String stage='';
   List<String> img = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    stage = GetStoredData.getString()??'Stage1';
+    debugPrint('Data2 |||||||||||||| '+stage);
+    stage = GetStoredData.getString()??'Stage1';
     getData();
   }
 
   getData() async {
-    final videoLink = await _firestore.collection(widget.collectionId as String).get();
+    final videoLink = await _firestore.collection(stage).get();
     for (var video in videoLink.docs) {
       final theLink = video.get('imgUrl');
       img.add(theLink);
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    debugPrint('Data3 |||||||||||||| '+stage);
     return Scaffold(
       drawer: const Drawers(),
       backgroundColor: colorBack1,
@@ -43,7 +50,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
       ),
       body: SizedBox(
         child: FutureBuilder<QuerySnapshot>(
-            future: _firestore.collection(widget.collectionId as String).get(),
+            future: _firestore.collection(stage).get(),
             builder: (ctx, snapshots) {
               final data = snapshots.data?.docs;
               List<String> docId = [];
@@ -84,6 +91,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
               }
 
               return GridView.builder(
+                physics: const BouncingScrollPhysics() ,
                 itemCount: docId.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
@@ -95,19 +103,15 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) => UserVideoScreen(
-                              collection: widget.collectionId as String,
+                              collection:stage,
                               docs: docId[index]),
                         ),
                       );
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        // image: const DecorationImage(
-                        //     image: NetworkImage('https://import.viva64.com/docx/blog/0329_CppPopularity/image1.png'), fit: BoxFit.cover),
-                      ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
                       child: GridTile(
-                        child: Image.network(img[index],fit: BoxFit.cover,),
+                        child:Image.network(img[0],fit: BoxFit.cover,),
                         footer: Container(
                           alignment: Alignment.center,
                           color: grey1,

@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
+import 'package:onlineclass/utlities/getStoredString.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'user_main_screen.dart';
 
-class UserStageScreen extends StatelessWidget {
+class UserStageScreen extends StatefulWidget {
   const UserStageScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UserStageScreen> createState() => _UserStageScreenState();
+}
+
+class _UserStageScreenState extends State<UserStageScreen> {
+
+  getInfo() async{
+    debugPrint('Shared Pref is called');
+    int? isSelected=0;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt('stageKeys', isSelected);
+    debugPrint(preferences.getInt('stageKeys').toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +40,14 @@ class UserStageScreen extends StatelessWidget {
               children: [
                 StagesCard(
                     title: 'Stage 1',
-                    onTap: () {
+                    onTap: () async {
+                      await GetStoredData.setString('Stage1');
+                      getInfo();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const UserMainScreen(collectionId: "Stage1"),
+                          const UserMainScreen(),
                         ),
                       );
                     },
@@ -38,12 +56,13 @@ class UserStageScreen extends StatelessWidget {
                     height: constraints.maxHeight * height),
                 StagesCard(
                     title: 'Stage 2',
-                    onTap: () {
+                    onTap: () async{
+                      await GetStoredData.setString('Stage2');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const UserMainScreen(collectionId: "Stage2"),
+                          const UserMainScreen(),
                         ),
                       );
                     },

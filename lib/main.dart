@@ -7,6 +7,9 @@ import 'package:onlineclass/user_screen/profile_screens.dart';
 import 'package:onlineclass/user_screen/user_main_screen.dart';
 import 'package:onlineclass/user_screen/user_stage_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
+import 'package:onlineclass/utlities/getStoredString.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+int? isSelected;
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -15,10 +18,16 @@ void main() async {
   );
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  GetStoredData.init();
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  isSelected=pref.getInt('stageKeys');
+
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const UserStageScreen(),
+      home:isSelected!=0? const UserStageScreen():const UserMainScreen(),
       initialRoute: '/',
       routes: {
         '/Stages': (ctx) => const UserStageScreen(),
