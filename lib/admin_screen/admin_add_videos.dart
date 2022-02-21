@@ -7,13 +7,15 @@ class AddVideoScreen extends StatefulWidget {
   AddVideoScreen({
     Key? key,
     required this.collectionId,
-    required this.docsId, required this.index, required this.tapped,
+    required this.docsId, required this.index, required this.tapped, required this.linkToBeEdited, required this.nameToBeEdited,
   }) : super(key: key);
 
   final String collectionId;
   final String docsId;
   final int index;
   final String tapped;
+  final String? linkToBeEdited;
+  final String? nameToBeEdited;
 
   @override
   State<AddVideoScreen> createState() => _AddVideoScreenState();
@@ -24,6 +26,8 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       RegExp(r"^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$");
   final _firestore = FirebaseFirestore.instance;
   List<String> ids = [];
+   TextEditingController linkController = TextEditingController();
+   TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
@@ -70,18 +74,18 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           .collection(widget.collectionId)
           .doc(widget.docsId)
           .collection('lessons').doc(ids[widget.index]).update({
-        'Link':videoUrls,
-        'Name':videoTitle
+        'Link':linkController.text,
+        'Name':nameController.text
       });
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Video Added',
+            'Video Updated!',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.green,
         ),
       );
     }
@@ -112,20 +116,23 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               ),
             ),
             TextField(
+              controller: nameController..text=widget.nameToBeEdited!,
               decoration: const InputDecoration(hintText: 'Title'),
               autofocus: true,
               textAlign: TextAlign.center,
               onChanged: (newText) {
-                videoTitle = newText;
+                nameController.text = newText;
               },
             ),
             TextField(
+              controller: linkController..text = widget.linkToBeEdited!,
               decoration: const InputDecoration(hintText: 'Link'),
               autofocus: true,
               textAlign: TextAlign.center,
               onChanged: (newText) {
                 if (regEx.hasMatch(newText)) {
-                  videoUrls = newText;
+                  linkController.text = newText;
+                  debugPrint('TEXT """"" '+linkController.text);
                 }
               },
             ),
@@ -138,7 +145,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               ),
               color: Colors.lightBlueAccent,
               onPressed: () {
-                if (videoTitle == null || videoUrls == null) {
+                if (linkController.text =='' || nameController.text =='') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(

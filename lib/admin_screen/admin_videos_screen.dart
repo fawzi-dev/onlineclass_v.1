@@ -52,8 +52,16 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                 isScrollControlled: true,
                 builder: (context) => SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: AddVideoScreen(collectionId: widget.collection,docsId: widget.docs, index: 0, tapped: 'Add',),
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: AddVideoScreen(
+                      collectionId: widget.collection,
+                      docsId: widget.docs,
+                      index: 0,
+                      tapped: 'Add',
+                      linkToBeEdited: '',
+                      nameToBeEdited: '',
+                    ),
                   ),
                 ),
               );
@@ -99,7 +107,9 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                     }
                     return VideoPlaylist(
                       videosList: listVideoTitle,
-                      videoUrl: listVideoLinks, collectionId: widget.collection, docuId: widget.docs,
+                      videoUrl: listVideoLinks,
+                      collectionId: widget.collection,
+                      docuId: widget.docs,
                     );
                   }
               }
@@ -111,7 +121,11 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
 
 class VideoPlaylist extends StatefulWidget {
   const VideoPlaylist(
-      {Key? key, required this.videosList, required this.videoUrl, required this.collectionId, required this.docuId})
+      {Key? key,
+      required this.videosList,
+      required this.videoUrl,
+      required this.collectionId,
+      required this.docuId})
       : super(key: key);
 
   final List<String> videosList;
@@ -138,8 +152,8 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
     setState(() {
       _controller = YoutubePlayerController(
         initialVideoId:
-        YoutubePlayerController.convertUrlToId(widget.videoUrl.elementAt(0))
-        as String,
+            YoutubePlayerController.convertUrlToId(widget.videoUrl.elementAt(0))
+                as String,
         params: const YoutubePlayerParams(
           showControls: true,
           showFullscreenButton: true,
@@ -166,19 +180,19 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
             itemBuilder: (ctx, index) => InkWell(
               onTap: () {
                 setState(
-                      () {
+                  () {
                     final videoIndex = widget.videoUrl.elementAt(index);
                     debugPrint(videoIndex);
                     _controller.load(
                         YoutubePlayerController.convertUrlToId(videoIndex)
-                        as String);
+                            as String);
                     _controller.hideTopMenu();
                   },
                 );
               },
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
+                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
                 child: SizedBox(
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
@@ -189,8 +203,12 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                       children: [
                         Flexible(
                           child: Container(
-                            child:const Center(
-                              child: Icon(Icons.play_circle_fill,size:35,color: Colors.black38,),
+                            child: const Center(
+                              child: Icon(
+                                Icons.play_circle_fill,
+                                size: 35,
+                                color: Colors.black38,
+                              ),
                             ),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
@@ -198,8 +216,8 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                                       YoutubePlayerController.getThumbnail(
                                           videoId: YoutubePlayerController
                                               .convertUrlToId(
-                                            widget.videoUrl[index],
-                                          ) as String),
+                                        widget.videoUrl[index],
+                                      ) as String),
                                     ),
                                     fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(5.0)),
@@ -220,14 +238,24 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                           ),
                         ),
                         InkWell(
-                          onTap: (){
+                          onTap: () {
                             showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
                               builder: (context) => SingleChildScrollView(
                                 child: Container(
-                                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                  child: AddVideoScreen(collectionId: 'Stage1',docsId: 'C++', index: index, tapped: 'Update',),
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: AddVideoScreen(
+                                    collectionId: 'Stage1',
+                                    docsId: 'C++',
+                                    index: index,
+                                    tapped: 'Update',
+                                    nameToBeEdited: widget.videosList[index],
+                                    linkToBeEdited: widget.videoUrl[index],
+                                  ),
                                 ),
                               ),
                             );
