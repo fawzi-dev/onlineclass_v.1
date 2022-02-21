@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:onlineclass/admin_screen/admin_screen.dart';
+import 'package:onlineclass/admin_screen/admin_stage_screen.dart';
+import 'package:onlineclass/user_screen/login_page.dart';
 import 'package:onlineclass/user_screen/profile_screens.dart';
 import 'package:onlineclass/user_screen/user_main_screen.dart';
 import 'package:onlineclass/user_screen/user_stage_screen.dart';
@@ -27,10 +29,9 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:isSelected!=0? const UserStageScreen():const UserMainScreen(),
+      home:isSelected!=0?const LoginPage():const AdminStageScreen(),
       initialRoute: '/',
       routes: {
-        '/Stages': (ctx) => const UserStageScreen(),
         '/MainScreen': (ctx) => const UserMainScreen(),
         '/Profile': (ctx) => const ProfileScreen()
       },

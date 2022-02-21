@@ -7,8 +7,9 @@ import 'package:onlineclass/utlities/getStoredString.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserMainScreen extends StatefulWidget {
-  const UserMainScreen({Key? key,}) : super(key: key);
-
+  const UserMainScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _UserMainScreenState createState() => _UserMainScreenState();
@@ -16,15 +17,13 @@ class UserMainScreen extends StatefulWidget {
 
 class _UserMainScreenState extends State<UserMainScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String stage='';
+  String stage = '';
   List<String> img = [];
 
   @override
   void initState() {
     super.initState();
-    stage = GetStoredData.getString()??'Stage1';
-    debugPrint('Data2 |||||||||||||| '+stage);
-    stage = GetStoredData.getString()??'Stage1';
+    stage = GetStoredData.getString() ?? 'Stage1';
     getData();
   }
 
@@ -36,11 +35,9 @@ class _UserMainScreenState extends State<UserMainScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    debugPrint('Data3 |||||||||||||| '+stage);
+    debugPrint('Data3 |||||||||||||| ' + stage);
     return Scaffold(
       drawer: const Drawers(),
       backgroundColor: colorBack1,
@@ -91,7 +88,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
               }
 
               return GridView.builder(
-                physics: const BouncingScrollPhysics() ,
+                physics: const BouncingScrollPhysics(),
                 itemCount: docId.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
@@ -103,15 +100,17 @@ class _UserMainScreenState extends State<UserMainScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) => UserVideoScreen(
-                              collection:stage,
-                              docs: docId[index]),
+                              collection: stage, docs: docId[index]),
                         ),
                       );
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: GridTile(
-                        child:Image.network(img[0],fit: BoxFit.cover,),
+                        child: Image.network(
+                          img[index],
+                          fit: BoxFit.cover,
+                        ),
                         footer: Container(
                           alignment: Alignment.center,
                           color: grey1,

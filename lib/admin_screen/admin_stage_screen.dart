@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:onlineclass/admin_screen/admin_main_screen.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
-
-import 'admin_main_screen.dart';
 
 class AdminStageScreen extends StatelessWidget {
   const AdminStageScreen({Key? key}) : super(key: key);
@@ -29,7 +28,7 @@ class AdminStageScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const AdminMainScreen(collection: "Stage1"),
+                          const AdminMainScreen(collectionId: "Stage1"),
                         ),
                       );
                     },
@@ -43,7 +42,7 @@ class AdminStageScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (ctx) =>
-                          const AdminMainScreen(collection: "Stage2"),
+                          const AdminMainScreen(collectionId: "Stage2"),
                         ),
                       );
                     },
