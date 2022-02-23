@@ -108,7 +108,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                       borderRadius: BorderRadius.circular(15),
                       child: GridTile(
                         child: Image.network(
-                          img[index],
+                          img[0],
                           fit: BoxFit.cover,
                         ),
                         footer: Container(

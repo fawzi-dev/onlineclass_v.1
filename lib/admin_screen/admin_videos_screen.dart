@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:onlineclass/utlities/snack_bar.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'dart:core';
-
 import 'admin_add_videos.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 class AdminVideoScreen extends StatefulWidget {
   const AdminVideoScreen(
@@ -21,8 +24,6 @@ class AdminVideoScreen extends StatefulWidget {
 }
 
 class _AdminVideoScreenState extends State<AdminVideoScreen> {
-  final _firestore = FirebaseFirestore.instance;
-
   @override
   void initState() {
     super.initState();
@@ -42,34 +43,36 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Videos'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: AddVideoScreen(
-                      collectionId: widget.collection,
-                      docsId: widget.docs,
-                      index: 0,
-                      tapped: 'Add',
-                      linkToBeEdited: '',
-                      nameToBeEdited: '',
-                    ),
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: MediaQuery.of(context).orientation == Orientation.portrait
+          ? AppBar(
+              title: const Text('Videos'),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: AddVideoScreen(
+                            collectionId: widget.collection,
+                            docsId: widget.docs,
+                            index: 0,
+                            tapped: 'Add',
+                            linkToBeEdited: '',
+                            nameToBeEdited: '',
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.add),
+                )
+              ],
+            )
+          : null,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: StreamBuilder<QuerySnapshot>(
@@ -140,145 +143,182 @@ class VideoPlaylist extends StatefulWidget {
 class _VideoPlaylistState extends State<VideoPlaylist> {
   late YoutubePlayerController _controller;
   List<String> videoShortId = [];
+  List<String> ids = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getVideo();
+    getData();
   }
 
   void getVideo() {
-    setState(() {
-      _controller = YoutubePlayerController(
-        initialVideoId:
-            YoutubePlayerController.convertUrlToId(widget.videoUrl.elementAt(0))
-                as String,
-        params: const YoutubePlayerParams(
-          showControls: true,
-          showFullscreenButton: true,
-          autoPlay: true,
-        ),
-      );
-    });
+    _controller = YoutubePlayerController(
+      initialVideoId:
+          YoutubePlayer.convertUrlToId(widget.videoUrl.elementAt(0)) as String,
+    );
+  }
+
+  getData() async {
+    final videoLink = await _firestore
+        .collection(widget.collectionId)
+        .doc(widget.docuId)
+        .collection('lessons')
+        .get();
+    for (var video in videoLink.docs) {
+      ids.add(video.id);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        YoutubePlayerIFrame(
-          controller: _controller,
-        ),
-        const SizedBox(
-          height: 10.0,
-        ),
-        Flexible(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: widget.videosList.length,
-            itemBuilder: (ctx, index) => InkWell(
-              onTap: () {
-                setState(
-                  () {
-                    final videoIndex = widget.videoUrl.elementAt(index);
-                    debugPrint(videoIndex);
-                    _controller.load(
-                        YoutubePlayerController.convertUrlToId(videoIndex)
-                            as String);
-                    _controller.hideTopMenu();
+    return WillPopScope(
+      onWillPop: () async {
+        if (MediaQuery.of(context).orientation == Orientation.landscape) {
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+        } else {
+          Navigator.pop(context);
+        }
+        return false;
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height:
+                  MediaQuery.of(context).orientation == Orientation.landscape
+                      ? MediaQuery.of(context).size.height * 0.95
+                      : MediaQuery.of(context).size.height * 0.35,
+              child: YoutubePlayer(
+                aspectRatio: 16 / 9,
+                controller: _controller,
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.55,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: widget.videosList.length,
+                itemBuilder: (ctx, index) => InkWell(
+                  onTap: () {
+                    setState(
+                      () {
+                        final videoIndex = widget.videoUrl.elementAt(index);
+                        debugPrint(videoIndex);
+                        _controller.load(
+                            YoutubePlayer.convertUrlToId(videoIndex) as String);
+                      },
+                    );
                   },
-                );
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
-                child: SizedBox(
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: 30,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Container(
-                            child: const Center(
-                              child: Icon(
-                                Icons.play_circle_fill,
-                                size: 35,
-                                color: Colors.black38,
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                      YoutubePlayerController.getThumbnail(
-                                          videoId: YoutubePlayerController
-                                              .convertUrlToId(
-                                        widget.videoUrl[index],
-                                      ) as String),
-                                    ),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(5.0)),
-                          ),
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.videosList[index],
-                                  style: videoTitleTextStyle,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => SingleChildScrollView(
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                          .viewInsets
-                                          .bottom),
-                                  child: AddVideoScreen(
-                                    collectionId: 'Stage1',
-                                    docsId: 'C++',
-                                    index: index,
-                                    tapped: 'Update',
-                                    nameToBeEdited: widget.videosList[index],
-                                    linkToBeEdited: widget.videoUrl[index],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18.0, vertical: 5.0),
+                    child: SizedBox(
+                      child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        width: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.play_circle_fill,
+                                    size: 35,
+                                    color: Colors.black38,
                                   ),
                                 ),
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                          YoutubePlayer.getThumbnail(
+                                              videoId:
+                                                  YoutubePlayer.convertUrlToId(
+                                            widget.videoUrl[index],
+                                          ) as String),
+                                        ),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(5.0)),
                               ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.drive_file_rename_outline_sharp,
-                            color: Colors.amber,
-                            size: MediaQuery.of(context).size.height * 0.05,
-                          ),
+                            ),
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.videosList[index],
+                                      style: videoTitleTextStyle,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (context) => SingleChildScrollView(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: AddVideoScreen(
+                                        collectionId: widget.collectionId,
+                                        docsId: widget.docuId,
+                                        index: index,
+                                        tapped: 'Update',
+                                        nameToBeEdited:
+                                            widget.videosList[index],
+                                        linkToBeEdited: widget.videoUrl[index],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Icon(
+                                Icons.drive_file_rename_outline_sharp,
+                                color: Colors.amber,
+                                size: MediaQuery.of(context).size.height * 0.05,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _firestore
+                                    .collection(widget.collectionId)
+                                    .doc(widget.docuId)
+                                    .collection('lessons')
+                                    .doc(ids[index])
+                                    .delete();
+                                showSnackBar(context, 'Video Deleted!',
+                                    Colors.redAccent);
+                              },
+                              child: const Icon(Icons.delete),
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                      color: darkBlue,
-                      borderRadius: BorderRadius.circular(5.0),
+                        decoration: BoxDecoration(
+                          color: darkBlue,
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        )
-      ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

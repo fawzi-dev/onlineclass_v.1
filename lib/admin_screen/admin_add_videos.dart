@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
+import '../utlities/snack_bar.dart';
+
 class AddVideoScreen extends StatefulWidget {
-  AddVideoScreen({
+  const AddVideoScreen({
     Key? key,
     required this.collectionId,
-    required this.docsId, required this.index, required this.tapped, required this.linkToBeEdited, required this.nameToBeEdited,
+    required this.docsId,
+    required this.index,
+    required this.tapped,
+    required this.linkToBeEdited,
+    required this.nameToBeEdited,
   }) : super(key: key);
 
   final String collectionId;
@@ -26,8 +31,8 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
       RegExp(r"^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$");
   final _firestore = FirebaseFirestore.instance;
   List<String> ids = [];
-   TextEditingController linkController = TextEditingController();
-   TextEditingController nameController = TextEditingController();
+  String linkController='';
+  String nameController='';
 
   @override
   void initState() {
@@ -37,9 +42,12 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   }
 
   getData() async {
-    final videoLink = await _firestore.collection(widget.collectionId).doc(widget.docsId).collection('lessons').get();
+    final videoLink = await _firestore
+        .collection(widget.collectionId)
+        .doc(widget.docsId)
+        .collection('lessons')
+        .get();
     for (var video in videoLink.docs) {
-      print('ID::::::: '+video.id);
       ids.add(video.id);
     }
   }
@@ -47,52 +55,31 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
   @override
   Widget build(BuildContext context) {
     final _firestore = FirebaseFirestore.instance;
-    String? videoTitle;
-    String? videoUrls;
+
 
     _addVideo() {
       _firestore
           .collection(widget.collectionId)
           .doc(widget.docsId)
           .collection('lessons')
-          .add({'Link': videoUrls, 'Name': videoTitle});
+          .add({'Link': linkController, 'Name': nameController});
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Video Added',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.black,
-        ),
-      );
+      showSnackBar(context, 'Video Added!', Colors.green);
     }
 
     _updatVideo() {
       _firestore
           .collection(widget.collectionId)
           .doc(widget.docsId)
-          .collection('lessons').doc(ids[widget.index]).update({
-        'Link':linkController.text,
-        'Name':nameController.text
-      });
+          .collection('lessons')
+          .doc(ids[widget.index])
+          .update({'Link': linkController, 'Name': nameController});
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Video Updated!',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
+      showSnackBar(context, 'Video Updated!', Colors.green);
     }
 
-
-
-    print("Your collection ID is " + widget.collectionId);
     return Container(
       color: const Color(0xff757575),
       child: Container(
@@ -108,7 +95,7 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              'Add Video',
+              '${widget.tapped} Video',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30.0,
@@ -116,36 +103,35 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
               ),
             ),
             TextField(
-              controller: nameController..text=widget.nameToBeEdited!,
               decoration: const InputDecoration(hintText: 'Title'),
+              textAlign: TextAlign.justify,
               autofocus: true,
-              textAlign: TextAlign.center,
               onChanged: (newText) {
-                nameController.text = newText;
+                nameController = newText;
               },
             ),
             TextField(
-              controller: linkController..text = widget.linkToBeEdited!,
               decoration: const InputDecoration(hintText: 'Link'),
+              textAlign: TextAlign.justify,
               autofocus: true,
-              textAlign: TextAlign.center,
               onChanged: (newText) {
                 if (regEx.hasMatch(newText)) {
-                  linkController.text = newText;
-                  debugPrint('TEXT """"" '+linkController.text);
+                  linkController = newText;
                 }
               },
             ),
-            FlatButton(
+            ElevatedButton(
               child: const Text(
                 'Add',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
-              color: Colors.lightBlueAccent,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(darkBlue),
+              ),
               onPressed: () {
-                if (linkController.text =='' || nameController.text =='') {
+                if (linkController == '' || nameController == '') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -157,10 +143,9 @@ class _AddVideoScreenState extends State<AddVideoScreen> {
                   );
                   Navigator.pop(context);
                 } else {
-                  if(widget.tapped=='Add'){
-                     _addVideo();
-                  }
-                  else {
+                  if (widget.tapped == 'Add') {
+                    _addVideo();
+                  } else {
                     _updatVideo();
                   }
                 }

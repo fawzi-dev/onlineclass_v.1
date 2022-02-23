@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:core';
+
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 String videoPlay = '';
 
@@ -32,9 +34,9 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
   Widget build(BuildContext context) {
     debugPrint(videoPlay);
     return Scaffold(
-      appBar: AppBar(
+      appBar:MediaQuery.of(context).orientation==Orientation.portrait? AppBar(
         title: Text(widget.docs + ' Lessons'),
-      ),
+      ):null,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: StreamBuilder<QuerySnapshot>(
@@ -109,102 +111,125 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
     setState(() {
       _controller = YoutubePlayerController(
         initialVideoId:
-            YoutubePlayerController.convertUrlToId(widget.videoUrl.elementAt(0))
+            YoutubePlayer.convertUrlToId(widget.videoUrl.elementAt(0))
                 as String,
-        params: const YoutubePlayerParams(
-          showControls: true,
-          showFullscreenButton: true,
-          autoPlay: true,
-        ),
+
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        YoutubePlayerIFrame(
-          controller: _controller,
-        ),
-        const SizedBox(
-          height: 10.0,
-        ),
-        Flexible(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: widget.videosList.length,
-            itemBuilder: (ctx, index) => InkWell(
-              onTap: () {
-                setState(
-                  () {
-                    final videoIndex = widget.videoUrl.elementAt(index);
-                    debugPrint(videoIndex);
-                    _controller.load(
-                        YoutubePlayerController.convertUrlToId(videoIndex)
-                            as String);
-                    _controller.hideTopMenu();
-                  },
-                );
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
-                child: SizedBox(
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: 30,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                      YoutubePlayerController.getThumbnail(
-                                          videoId: YoutubePlayerController
-                                              .convertUrlToId(
-                                        widget.videoUrl[index],
-                                      ) as String),
+    return SafeArea(
+      child:WillPopScope(
+        onWillPop: () async {
+          if (MediaQuery.of(context).orientation == Orientation.landscape) {
+            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+          } else {
+            Navigator.pop(context);
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? MediaQuery.of(context).size.height * 0.95
+                    : MediaQuery.of(context).size.height * 0.35,
+                child: YoutubePlayer(
+                  aspectRatio: 16 / 9,
+                  controller: _controller,
+                ),
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.55,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: widget.videosList.length,
+                  itemBuilder: (ctx, index) => InkWell(
+                    onTap: () {
+                      setState(
+                            () {
+                          final videoIndex = widget.videoUrl.elementAt(index);
+                          debugPrint(videoIndex);
+                          _controller.load(
+                              YoutubePlayer.convertUrlToId(videoIndex) as String);
+                        },
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 5.0),
+                      child: SizedBox(
+                        child: Container(
+                          padding: const EdgeInsets.all(12.0),
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: 30,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.play_circle_fill,
+                                      size: 35,
+                                      color: Colors.black38,
                                     ),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(5.0)),
-                          ),
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.videosList[index],
-                                  style: videoTitleTextStyle,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                            YoutubePlayer.getThumbnail(
+                                                videoId:
+                                                YoutubePlayer.convertUrlToId(
+                                                  widget.videoUrl[index],
+                                                ) as String),
+                                          ),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(5.0)),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.videosList[index],
+                                        style: videoTitleTextStyle,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.play_circle_fill,
+                                color: Colors.amber,
+                                size: MediaQuery.of(context).size.height * 0.05,
+                              ),
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                            color: darkBlue,
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
-                        Icon(
-                          Icons.play_circle_filled_outlined,
-                          color: Colors.amber,
-                          size: MediaQuery.of(context).size.height * 0.05,
-                        )
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                      color: darkBlue,
-                      borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
