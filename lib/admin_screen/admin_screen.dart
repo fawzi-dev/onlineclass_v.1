@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onlineclass/admin_screen/admin_stage_screen.dart';
+import 'package:onlineclass/admin_screen/admin_users_list.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
@@ -46,7 +47,9 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                   AdminButtonCard(
                     title: 'Add Student',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx)=>const AdminUsersList()));
+                    },
                     height: constraints.maxHeight * 0.2,
                     paddingHorizontal: constraints.maxWidth * 0.03,
                     paddingVertical: constraints.maxHeight * 0.03,
