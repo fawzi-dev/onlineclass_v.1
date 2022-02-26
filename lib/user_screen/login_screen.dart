@@ -168,7 +168,7 @@ class _UserLoginState extends State<UserLogin> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
                   colorBack1,
-                  darkBlue,
+                  cyan,
                 ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
               ),
               child: Column(
