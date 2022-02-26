@@ -11,7 +11,9 @@ import 'package:onlineclass/user_screen/user_main_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/getStoredString.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 int? isSelected;
+String? userType;
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -21,18 +23,28 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  GetStoredData.init();
-  SharedPreferences pref = await SharedPreferences.getInstance();
-  isSelected=pref.getInt('stageKeys');
+  await GetUserData.init();
+  await GetStoredData.init();
 
+  userType = GetUserData.getString()??'';
+  getClass(){
+    if(userType=='Admin'){
+      return const AdminScreen();
+    }
+    else if(userType=='User') {
+      return const UserMainScreen();
+    }
+    else {
+      return const UserLogin();
+    }
+  }
 
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home:const UserLogin(),
-      initialRoute: '/',
       routes: {
-        '/MainScreen': (ctx) => const UserMainScreen(),
+        '/UserMainScreen': (ctx) => const UserMainScreen(),
         '/Profile': (ctx) => const ProfileScreen(),
         '/AdminScreen':(ctx)=> const AdminScreen(),
         '/AdminLoginPage':(ctx)=> const AdminAddUser(),

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:onlineclass/utlities/colors.dart';
+import 'package:onlineclass/utlities/getStoredString.dart';
 
 import '../constants/constants.dart';
 
@@ -9,6 +10,8 @@ class Drawers extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+
+
   @override
   State<Drawers> createState() => _DrawersState();
 }
@@ -16,7 +19,8 @@ class Drawers extends StatefulWidget {
 class _DrawersState extends State<Drawers> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  String? name;
+  String? username;
 
 
 
@@ -24,6 +28,8 @@ class _DrawersState extends State<Drawers> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    name = GetUserData.getNameString();
+    username = GetUserData.getUsernameString();
   }
 
   @override
@@ -38,8 +44,8 @@ class _DrawersState extends State<Drawers> {
               color: skyBlue,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircleAvatar(
+                children:  [
+                  const CircleAvatar(
                     child: Icon(Icons.person),
                     radius: 40,
                     backgroundColor: Colors.cyan,
@@ -47,13 +53,13 @@ class _DrawersState extends State<Drawers> {
                   Flexible(
                     child: ListTile(
                       title: Text(
-                        'John Doe',
+                        name as String,
                         style: kUser,
                       ),
-                      subtitle: Padding(
-                        padding: EdgeInsets.only(left: 4.0),
+                      subtitle:  Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
-                          'john_doe1',
+                          username as String,
                           style: kUserName,
                         ),
                       ),
