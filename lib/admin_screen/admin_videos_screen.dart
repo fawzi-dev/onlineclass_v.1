@@ -71,6 +71,7 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                   icon: const Icon(Icons.add),
                 )
               ],
+              backgroundColor: colorBack1,
             )
           : null,
       body: SizedBox(

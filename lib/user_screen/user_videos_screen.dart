@@ -35,6 +35,7 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
     debugPrint(videoPlay);
     return Scaffold(
       appBar:MediaQuery.of(context).orientation==Orientation.portrait? AppBar(
+        backgroundColor: colorBack1,
         title: Text(widget.docs + ' Lessons'),
       ):null,
       body: SizedBox(

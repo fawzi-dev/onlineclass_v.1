@@ -6,7 +6,6 @@ import 'package:onlineclass/admin_screen/admin_add_user.dart';
 import 'package:onlineclass/admin_screen/admin_screen.dart';
 import 'package:onlineclass/admin_screen/admin_users_list.dart';
 import 'package:onlineclass/user_screen/login_screen.dart';
-import 'package:onlineclass/user_screen/profile_screens.dart';
 import 'package:onlineclass/user_screen/user_main_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/getStoredString.dart';
@@ -42,10 +41,9 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:const UserLogin(),
+      home:getClass(),
       routes: {
         '/UserMainScreen': (ctx) => const UserMainScreen(),
-        '/Profile': (ctx) => const ProfileScreen(),
         '/AdminScreen':(ctx)=> const AdminScreen(),
         '/AdminLoginPage':(ctx)=> const AdminAddUser(),
         '/AdminUsersList':(ctx)=> const AdminUsersList()

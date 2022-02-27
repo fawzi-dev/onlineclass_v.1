@@ -3,6 +3,8 @@ import 'package:onlineclass/admin_screen/admin_main_screen.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
+import '../utlities/drawer.dart';
+
 class AdminStageScreen extends StatelessWidget {
   const AdminStageScreen({Key? key}) : super(key: key);
 
@@ -14,6 +16,11 @@ class AdminStageScreen extends StatelessWidget {
     const horizontalPadding = 0.05;
 
     return Scaffold(
+      backgroundColor: colorBack1,
+      appBar: AppBar(
+        title: const Text('Stages'),
+        backgroundColor: colorBack1,
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (ctx, constraints) => Container(

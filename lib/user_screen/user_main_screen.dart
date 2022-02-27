@@ -37,7 +37,6 @@ class _UserMainScreenState extends State<UserMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Data3 |||||||||||||| ' + stage);
     return Scaffold(
       drawer: const Drawers(),
       backgroundColor: colorBack1,

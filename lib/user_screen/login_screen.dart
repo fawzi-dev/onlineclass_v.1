@@ -117,10 +117,13 @@ class _UserLoginState extends State<UserLogin> {
                 (Route<dynamic> route) => false);
           }
           // check if user credentials are correct
-          else if (usersname[i] == userId &&
+          else if (
+              usersname[i] == userId &&
               passwords[i] == password &&
               userTypes[i] == 'User' &&
-              userStages[i] != dropDownValue[0]) {
+              dropDownValue != 'Select Stage' &&
+              userStages[i]==dropDownValue
+              ) {
             showSnackBar(context, 'User logged in!', Colors.green);
             await GetUserData.setString('User', names[i], usersname[i]);
             GetStoredData.setString(dropDownValue);

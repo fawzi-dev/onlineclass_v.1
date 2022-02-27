@@ -6,6 +6,8 @@ import 'package:onlineclass/admin_screen/admin_users_list.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
 
+import '../utlities/drawer.dart';
+
 class AdminScreen extends StatefulWidget {
   const AdminScreen({Key? key}) : super(key: key);
 
@@ -18,8 +20,12 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    drawer: const Drawers(),
       backgroundColor: colorBack1,
-      drawer: null,
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+        backgroundColor: colorBack1,
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (ctx, constraints) => SizedBox(

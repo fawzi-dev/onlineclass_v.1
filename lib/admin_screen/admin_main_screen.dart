@@ -39,7 +39,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawers(),
+    
       backgroundColor: colorBack1,
       appBar: AppBar(
         title: const Text('Home'),

@@ -1,39 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:onlineclass/user_screen/login_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/getStoredString.dart';
 
 import '../constants/constants.dart';
+import '../user_screen/user_main_screen.dart';
 
 class Drawers extends StatefulWidget {
   const Drawers({
     Key? key,
   }) : super(key: key);
 
-
-
   @override
   State<Drawers> createState() => _DrawersState();
 }
 
 class _DrawersState extends State<Drawers> {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? name;
   String? username;
-
-
+  List<String> nameSplited=[];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    name = GetUserData.getNameString();
+    name = GetUserData.getNameString()??'Name';
     username = GetUserData.getUsernameString();
+    name?.split('').forEach((element) {nameSplited.add(element);});
   }
+
 
   @override
   Widget build(BuildContext context) {
+      debugPrint(nameSplited.first);
     return Drawer(
       child: Column(
         children: [
@@ -41,14 +41,14 @@ class _DrawersState extends State<Drawers> {
             child: Container(
               alignment: Alignment.bottomLeft,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              color: skyBlue,
+              color: colorBack1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:  [
-                  const CircleAvatar(
-                    child: Icon(Icons.person),
+                children: [
+                   CircleAvatar(
+                    child: Text(nameSplited.first.toUpperCase() +''+nameSplited.last.toUpperCase(),style: circleAvatar,),
                     radius: 40,
-                    backgroundColor: Colors.cyan,
+                    backgroundColor: darkBlue,
                   ),
                   Flexible(
                     child: ListTile(
@@ -56,7 +56,7 @@ class _DrawersState extends State<Drawers> {
                         name as String,
                         style: kUser,
                       ),
-                      subtitle:  Padding(
+                      subtitle: Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
                           username as String,
@@ -82,20 +82,16 @@ class _DrawersState extends State<Drawers> {
                     },
                   ),
                   DrawerButtons(
-                    title: 'Profile',
-                    icon: Icons.person,
-                    onTap: () {
-                      Navigator.pushNamed(context, '/Profile');},
-                  ),
-                  DrawerButtons(
-                    title: 'Settings',
-                    icon: Icons.settings,
-                    onTap: () {},
-                  ),
-                  DrawerButtons(
-                    title: 'Exit',
+                    title: 'Log out',
                     icon: Icons.exit_to_app_sharp,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) =>  const UserLogin(),
+                          ),
+                          (Route<dynamic> route) => false);
+                    },
                   ),
                 ],
               ),
@@ -127,7 +123,7 @@ class DrawerButtons extends StatelessWidget {
         leading: Icon(
           icon,
           size: 35,
-          color: skyBlue,
+          color: darkBlue,
         ),
         title: Text(
           title,

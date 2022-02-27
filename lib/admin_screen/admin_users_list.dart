@@ -51,11 +51,7 @@ class _AdminUsersListState extends State<AdminUsersList> {
                 print('Name ' + userName);
               }
             }
-            return ListView.builder(
-              itemBuilder: (ctx, index) =>
-                  UserCard(name: name, username: email),
-            );
-          },
+            return UserCard(name: name, username: email);          },
         ),
       ),
     );
@@ -114,6 +110,7 @@ class _UserCardState extends State<UserCard> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
           itemCount: widget.name.length,
           itemBuilder: (ctx, index) => Padding(
             padding: const EdgeInsets.all(8.0),
@@ -146,7 +143,7 @@ class _UserCardState extends State<UserCard> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (ctx) => AdminAddUser(
-                                      tappedButton: 'Add',
+                                      tappedButton: 'Update',
                                       userDocumentID: userIds[index]),
                                 ),
                               );
@@ -161,6 +158,7 @@ class _UserCardState extends State<UserCard> {
                           child: IconButton(
                             onPressed: () {
                               deleteUser(index);
+                              userIds.removeAt(index);
                             },
                             icon: Icon(
                               Icons.delete,

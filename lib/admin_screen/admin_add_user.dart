@@ -7,6 +7,8 @@ import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/snack_bar.dart';
 import '../utlities/user_model.dart';
+FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
 
 class AdminAddUser extends StatefulWidget {
   const AdminAddUser({Key? key, this.tappedButton, this.userDocumentID}) : super(key: key);
@@ -123,12 +125,12 @@ class _AdminAddUserState extends State<AdminAddUser> {
         // check if user role is selected with proper stage
         else if (userValue == 'User' && dropDownValue != stages[0]) {
           stage = dropDownValue;
-          postDetailsToFirestore(userId!, userValue, stage);
+          getFunc(userId!, userValue, stage);
         }
         // check if admin is selected
         else if (userValue == 'Admin') {
           stage = "";
-          postDetailsToFirestore(userId!, userValue, stage);
+          getFunc(userId!, userValue, stage);
         } else {
           showSnackBar(
               context, 'Please input information correctly', Colors.redAccent);
@@ -144,8 +146,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
     });
   }
 
-  postDetailsToFirestore(String username, String role, String stage) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+ getFunc(String username, String role, String stage)async{
+   if(widget.tappedButton=='Add'){
     UserModel userModel = UserModel();
     userModel.username = userId;
     userModel.password = password;
@@ -163,7 +165,27 @@ class _AdminAddUserState extends State<AdminAddUser> {
       ),
      (Route<dynamic> route) => false
     );
-  }
+   }
+   else{
+    UserModel userModel = UserModel();
+    userModel.username = userId;
+    userModel.password = password;
+    userModel.name = name;
+    userModel.userRole = role;
+    userModel.stage = stage;
+    await firebaseFirestore.collection("users").doc(widget.userDocumentID).update(userModel.toMap());
+    showSnackBar(context, 'User info updated!', Colors.green);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => AdminUsersList(
+          key: UniqueKey(),
+        ),
+      ),
+     (Route<dynamic> route) => false
+    );
+   }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -255,8 +277,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropDownValue = newValue!;
-                                    debugPrint('Selected Value ::::: ' +
-                                        dropDownValue);
                                   });
                                 },
                               )
@@ -266,8 +286,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
                           width: constraints.maxWidth * 0.9,
                           child: ElevatedButton(
                             onPressed: signup,
-                            child: const Text(
-                              'Create User',
+                            child:  Text(
+                              widget.tappedButton as String,
                               style: kLoginStyle,
                             ),
                           ),
