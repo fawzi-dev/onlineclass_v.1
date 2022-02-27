@@ -104,14 +104,7 @@ class _UserLoginState extends State<UserLogin> {
       _formKey.currentState?.save();
       try {
         for (var i = 0; i < usersname.length; i++) {
-          if(usersname[i] != userId ||
-              passwords[i] != password){
-                showSnackBar(context, 'Username or password is incorrect , or maybe stage is not selected or incorrect !',
-                Colors.redAccent);
-                break;
-              }
-          // check if admin credentials are correct
-          else if (usersname[i] == userId &&
+          if (usersname[i] == userId &&
               passwords[i] == password &&
               userTypes[i] == 'Admin') {
             showSnackBar(context, 'Admin logged in!', Colors.green);
@@ -127,7 +120,7 @@ class _UserLoginState extends State<UserLogin> {
           else if (usersname[i] == userId &&
               passwords[i] == password &&
               userTypes[i] == 'User' &&
-              userStages[i] == dropDownValue) {
+              userStages[i] != dropDownValue[0]) {
             showSnackBar(context, 'User logged in!', Colors.green);
             await GetUserData.setString('User', names[i], usersname[i]);
             GetStoredData.setString(dropDownValue);
@@ -137,14 +130,18 @@ class _UserLoginState extends State<UserLogin> {
                   builder: (ctx) => const UserMainScreen(),
                 ),
                 (Route<dynamic> route) => false);
+                break;
           }
           // check if textBox are not empty
           else if (userId == '' || password == '') {
             showSnackBar(context, 'Please input information correctly',
                 Colors.redAccent);
-          } else if(userTypes[i]=='User' && dropDownValue==stages[0]) {
-           showSnackBar(context, 'Select',
+                break;
+          }
+          else if(usersname[i].contains(userId!)==true || usersname[i].contains(password!)==true){
+            showSnackBar(context, 'Username or password is incorrect, or stage may not be selected!',
                 Colors.redAccent);
+                break;
           }
         }
       } catch (e) {
