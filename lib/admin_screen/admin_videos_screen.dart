@@ -221,7 +221,7 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                     child: SizedBox(
                       child: Container(
                         padding: const EdgeInsets.all(12.0),
-                        height: MediaQuery.of(context).size.height * 0.15,
+                        height:  MediaQuery.of(context).orientation == Orientation.landscape? MediaQuery.of(context).size.height * 0.15:MediaQuery.of(context).size.height * 0.1,
                         width: 30,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,7 +252,6 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 12.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       widget.videosList[index],
@@ -286,24 +285,25 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                                   ),
                                 );
                               },
-                              child: Icon(
-                                Icons.drive_file_rename_outline_sharp,
+                              child: const Icon(
+                                Icons.edit,
                                 color: Colors.amber,
-                                size: MediaQuery.of(context).size.height * 0.05,
                               ),
                             ),
+                            SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
                             InkWell(
                               onTap: () {
-                                _firestore
+                                    _firestore
                                     .collection(widget.collectionId)
                                     .doc(widget.docuId)
                                     .collection('lessons')
                                     .doc(ids[index])
                                     .delete();
-                                showSnackBar(context, 'Video Deleted!',
+                                    showSnackBar(context, 'Video Deleted!',
                                     Colors.redAccent);
+                                    ids.removeAt(index);
                               },
-                              child: const Icon(Icons.delete),
+                              child:  Icon(Icons.delete,color: Colors.red.shade400,),
                             )
                           ],
                         ),

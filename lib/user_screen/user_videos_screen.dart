@@ -34,10 +34,12 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
   Widget build(BuildContext context) {
     debugPrint(videoPlay);
     return Scaffold(
-      appBar:MediaQuery.of(context).orientation==Orientation.portrait? AppBar(
-        backgroundColor: colorBack1,
-        title: Text(widget.docs + ' Lessons'),
-      ):null,
+      appBar: MediaQuery.of(context).orientation == Orientation.portrait
+          ? AppBar(
+              backgroundColor: colorBack1,
+              title: Text(widget.docs),
+            )
+          : null,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: StreamBuilder<QuerySnapshot>(
@@ -114,7 +116,6 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
         initialVideoId:
             YoutubePlayer.convertUrlToId(widget.videoUrl.elementAt(0))
                 as String,
-
       );
     });
   }
@@ -122,10 +123,11 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:WillPopScope(
+      child: WillPopScope(
         onWillPop: () async {
           if (MediaQuery.of(context).orientation == Orientation.landscape) {
-            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+            SystemChrome.setPreferredOrientations(
+                [DeviceOrientation.portraitUp]);
           } else {
             Navigator.pop(context);
           }
@@ -136,9 +138,9 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
             children: [
               Container(
                 height:
-                MediaQuery.of(context).orientation == Orientation.landscape
-                    ? MediaQuery.of(context).size.height * 0.95
-                    : MediaQuery.of(context).size.height * 0.35,
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? MediaQuery.of(context).size.height * 0.95
+                        : MediaQuery.of(context).size.height * 0.35,
                 child: YoutubePlayer(
                   aspectRatio: 16 / 9,
                   controller: _controller,
@@ -155,11 +157,12 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                   itemBuilder: (ctx, index) => InkWell(
                     onTap: () {
                       setState(
-                            () {
+                        () {
                           final videoIndex = widget.videoUrl.elementAt(index);
                           debugPrint(videoIndex);
                           _controller.load(
-                              YoutubePlayer.convertUrlToId(videoIndex) as String);
+                              YoutubePlayer.convertUrlToId(videoIndex)
+                                  as String);
                         },
                       );
                     },
@@ -169,7 +172,10 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                       child: SizedBox(
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
-                          height: MediaQuery.of(context).size.height * 0.15,
+                          height: MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? MediaQuery.of(context).size.height * 0.15
+                              : MediaQuery.of(context).size.height * 0.1,
                           width: 30,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,10 +193,10 @@ class _VideoPlaylistState extends State<VideoPlaylist> {
                                       image: DecorationImage(
                                           image: NetworkImage(
                                             YoutubePlayer.getThumbnail(
-                                                videoId:
-                                                YoutubePlayer.convertUrlToId(
-                                                  widget.videoUrl[index],
-                                                ) as String),
+                                                videoId: YoutubePlayer
+                                                    .convertUrlToId(
+                                              widget.videoUrl[index],
+                                            ) as String),
                                           ),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.circular(5.0)),

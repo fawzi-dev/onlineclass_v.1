@@ -84,7 +84,8 @@ class _DrawersState extends State<Drawers> {
                   DrawerButtons(
                     title: 'Log out',
                     icon: Icons.exit_to_app_sharp,
-                    onTap: () {
+                    onTap: () async {
+                      await GetUserData.setString('','', '');
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

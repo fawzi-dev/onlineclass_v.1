@@ -46,84 +46,84 @@ class _UserMainScreenState extends State<UserMainScreen> {
       ),
       body: SizedBox(
         child: FutureBuilder<QuerySnapshot>(
-            future: _firestore.collection(stage).get(),
-            builder: (ctx, snapshots) {
-              final data = snapshots.data?.docs;
-              List<String> docId = [];
-              switch (snapshots.connectionState) {
-                case ConnectionState.waiting:
-                  return const Center(child: CircularProgressIndicator());
-                case ConnectionState.none:
-                  const Center(
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.error_outline,
-                        size: 55,
-                      ),
-                      title: Text('Some error occurred!'),
-                      subtitle: Text(
-                          'Usually, this is because of internet connection \nor there is no uploaded video yet in the server.'),
+          future: _firestore.collection(stage).get(),
+          builder: (ctx, snapshots) {
+            final data = snapshots.data?.docs;
+            List<String> docId = [];
+            switch (snapshots.connectionState) {
+              case ConnectionState.waiting:
+                return const Center(child: CircularProgressIndicator());
+              case ConnectionState.none:
+                const Center(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.error_outline,
+                      size: 55,
                     ),
-                  );
-                  break;
-                case ConnectionState.active:
-                  const Center(
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.error_outline,
-                        size: 55,
-                      ),
-                      title: Text('You are connected'),
-                      subtitle: Text(
-                          'Usually, this is because of internet connection \nor there is no uploaded video yet in the server.'),
+                    title: Text('Some error occurred!'),
+                    subtitle: Text(
+                        'Usually, this is because of internet connection \nor there is no uploaded video yet in the server.'),
+                  ),
+                );
+                break;
+              case ConnectionState.active:
+                const Center(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.error_outline,
+                      size: 55,
                     ),
-                  );
-                  break;
-                case ConnectionState.done:
-                  for (var titles in data!) {
-                    docId.add(titles.id);
-                  }
-                  break;
-              }
-
-              return GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: docId.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemBuilder: (ctx, index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => UserVideoScreen(
-                              collection: stage, docs: docId[index]),
-                        ),
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: GridTile(
-                        child: Image.network(
-                          img[0],
-                          fit: BoxFit.cover,
-                        ),
-                        footer: Container(
-                          alignment: Alignment.center,
-                          color: grey1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(docId[index]),
-                          ),
+                    title: Text('You are connected'),
+                    subtitle: Text(
+                        'Usually, this is because of internet connection \nor there is no uploaded video yet in the server.'),
+                  ),
+                );
+                break;
+              case ConnectionState.done:
+                for (var titles in data!) {
+                  docId.add(titles.id);
+                }
+                break;
+            }
+            return GridView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: docId.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
+              itemBuilder: (ctx, index) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal:14.0,vertical: 12.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => UserVideoScreen(
+                            collection: stage, docs: docId[index]),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: GridTile(
+                      child: Image.network(
+                        img[index],
+                        fit: BoxFit.cover,
+                      ),
+                      footer: Container(
+                        alignment: Alignment.center,
+                        color: grey1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(docId[index]),
                         ),
                       ),
                     ),
                   ),
                 ),
-              );
-            }),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
