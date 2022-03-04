@@ -68,7 +68,7 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(Icons.add,color:Colors.amber),
                 )
               ],
               backgroundColor: colorBack1,

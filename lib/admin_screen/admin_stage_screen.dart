@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:onlineclass/admin_screen/admin_main_screen.dart';
 import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/utlities/colors.dart';
+import 'package:onlineclass/utlities/stagePath.dart';
 
 import '../utlities/drawer.dart';
 
@@ -31,13 +32,7 @@ class AdminStageScreen extends StatelessWidget {
                 StagesCard(
                     title: 'Stage 1',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) =>
-                          const AdminMainScreen(collectionId: "Stage1"),
-                        ),
-                      );
+                      goToStage(context, 'Stage1');
                     },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
@@ -45,20 +40,16 @@ class AdminStageScreen extends StatelessWidget {
                 StagesCard(
                     title: 'Stage 2',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) =>
-                          const AdminMainScreen(collectionId: "Stage2"),
-                        ),
-                      );
+                      goToStage(context, 'Stage2');
                     },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
                     height: constraints.maxHeight * height),
                 StagesCard(
                     title: 'Stage 3',
-                    onTap: () {},
+                    onTap: () {
+                      goToStage(context, 'Stage3');
+                    },
                     paddingHorizontal: constraints.maxWidth * horizontalPadding,
                     paddingVertical: constraints.maxHeight * verticalPadding,
                     height: constraints.maxHeight * height),
@@ -72,7 +63,7 @@ class AdminStageScreen extends StatelessWidget {
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: cyan,
+                        color: Colors.amber,
                         ),
                       ),
                       Padding(
@@ -86,7 +77,7 @@ class AdminStageScreen extends StatelessWidget {
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: cyan,
+                      color: Colors.amber,
                         ),
                       ),
                     ],
@@ -97,14 +88,18 @@ class AdminStageScreen extends StatelessWidget {
                 ),
                 StagesCard(
                   title: 'Stage 4',
-                  onTap: () {},
+                  onTap: () {
+                    goToStage(context, 'Stage 4 - Programming');
+                  },
                   paddingHorizontal: constraints.maxWidth * horizontalPadding,
                   paddingVertical: constraints.maxHeight * verticalPadding,
                   height: constraints.maxHeight * height,
                 ),
                 StagesCard(
                   title: 'Stage 5',
-                  onTap: () {},
+                  onTap: () {
+                     goToStage(context, 'Stage 5 - Programming');
+                  },
                   paddingHorizontal: constraints.maxWidth * horizontalPadding,
                   paddingVertical: constraints.maxHeight * verticalPadding,
                   height: constraints.maxHeight * height,
@@ -118,7 +113,7 @@ class AdminStageScreen extends StatelessWidget {
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: cyan,
+                          color: Colors.amber,
                         ),
                       ),
                       Padding(
@@ -131,7 +126,7 @@ class AdminStageScreen extends StatelessWidget {
                       Expanded(
                         child: Container(
                           height: 1,
-                          color: cyan,
+                          color: Colors.amber,
                         ),
                       ),
                     ],
@@ -142,14 +137,18 @@ class AdminStageScreen extends StatelessWidget {
                 ),
                 StagesCard(
                   title: 'Stage 4',
-                  onTap: () {},
+                  onTap: () {
+                     goToStage(context, 'Stage 4 - Network');
+                  },
                   paddingHorizontal: constraints.maxWidth * horizontalPadding,
                   paddingVertical: constraints.maxHeight * verticalPadding,
                   height: constraints.maxHeight * height,
                 ),
                 StagesCard(
                   title: 'Stage 5',
-                  onTap: () {},
+                  onTap: () {
+                    goToStage(context, 'Stage 5 - Network');
+                  },
                   paddingHorizontal: constraints.maxWidth * horizontalPadding,
                   paddingVertical: constraints.maxHeight * verticalPadding,
                   height: constraints.maxHeight * height,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:onlineclass/admin_screen/admin_add_user.dart';
 import 'package:onlineclass/admin_screen/admin_screen.dart';
+import 'package:onlineclass/admin_screen/admin_stage_screen.dart';
 import 'package:onlineclass/admin_screen/admin_users_list.dart';
 import 'package:onlineclass/user_screen/login_screen.dart';
 import 'package:onlineclass/user_screen/user_main_screen.dart';
@@ -25,15 +26,13 @@ void main() async {
   await GetUserData.init();
   await GetStoredData.init();
 
-  userType = GetUserData.getString()??'';
-  getClass(){
-    if(userType=='Admin'){
+  userType = GetUserData.getString() ?? '';
+  getClass() {
+    if (userType == 'Admin') {
       return const AdminScreen();
-    }
-    else if(userType=='User') {
+    } else if (userType == 'User') {
       return const UserMainScreen();
-    }
-    else {
+    } else {
       return const UserLogin();
     }
   }
@@ -41,12 +40,12 @@ void main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:getClass(),
+      home: getClass(),
       routes: {
         '/UserMainScreen': (ctx) => const UserMainScreen(),
-        '/AdminScreen':(ctx)=> const AdminScreen(),
-        '/AdminLoginPage':(ctx)=> const AdminAddUser(),
-        '/AdminUsersList':(ctx)=> const AdminUsersList()
+        '/AdminScreen': (ctx) => const AdminScreen(),
+        '/AdminLoginPage': (ctx) => const AdminAddUser(),
+        '/AdminUsersList': (ctx) => const AdminUsersList()
       },
     ),
   );
