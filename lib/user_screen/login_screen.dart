@@ -50,7 +50,6 @@ class _UserLoginState extends State<UserLogin> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userType = GetUserData.getString() ?? 'Null';
     debugPrint('User Data' + userType!);
@@ -79,19 +78,28 @@ class _UserLoginState extends State<UserLogin> {
     setState(() {
       isSpinning = true;
     });
+
+    // username...
     List<String> usersname = [];
     List<String> passwords = [];
     List<String> userStages = [];
     List<String> userTypes = [];
     List<String> names = [];
 
+    // Get  users
     final user = await _firebase.collection('users').get();
     for (var userInfo in user.docs) {
+      /// name = ali
       final name = userInfo.get('name');
+      // useranme = ali
       final username = userInfo.get('username');
+      // password = 111
       final password = userInfo.get('password');
+      // stage = .....
       final stage = userInfo.get('stage');
+      /// userType = ....
       final userType = userInfo.get('userrole');
+
       names.add(name);
       usersname.add(username);
       passwords.add(password);
@@ -106,9 +114,15 @@ class _UserLoginState extends State<UserLogin> {
           if (usersname[i] == userId &&
               passwords[i] == password &&
               userTypes[i] == 'Admin') {
+            
+            /// To notify user that they are logged in
             showSnackBar(context, 'Admin logged in!', Colors.green);
+
+            /// to persist  data  in local database
             await GetUserData.setString('Admin', names[i], usersname[i]);
-             Navigator.pushAndRemoveUntil(
+
+            //  To navigate
+            Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (ctx) => const AdminScreen(),
@@ -116,15 +130,19 @@ class _UserLoginState extends State<UserLogin> {
                 (Route<dynamic> route) => false);
           }
           // check if user credentials are correct
-          else if (
-              usersname[i] == userId &&
+          else if (usersname[i] == userId &&
               passwords[i] == password &&
               userTypes[i] == 'User' &&
               dropDownValue != 'Select Stage' &&
-              userStages[i]==dropDownValue
-              ) {
+              userStages[i] == dropDownValue) {
+
+                /// To notify
             showSnackBar(context, 'User logged in!', Colors.green);
+
+            /// .....
             await GetUserData.setString('User', names[i], usersname[i]);
+
+            ///  Stage 1
             GetStoredData.setString(dropDownValue);
             Navigator.pushAndRemoveUntil(
                 context,
@@ -132,23 +150,25 @@ class _UserLoginState extends State<UserLogin> {
                   builder: (ctx) => const UserMainScreen(),
                 ),
                 (Route<dynamic> route) => false);
-                break;
+            break;
           }
           // check if textBox are not empty
           else if (userId == '' || password == '') {
             showSnackBar(context, 'Please input information correctly',
                 Colors.redAccent);
-                break;
-          }
-          else if(usersname[i].contains(userId!)==true || usersname[i].contains(password!)==true){
-            showSnackBar(context, 'Username or password is incorrect, or stage may not be selected!',
+            break;
+          } else if (usersname[i].contains(userId!) == true ||
+              usersname[i].contains(password!) == true) {
+            showSnackBar(
+                context,
+                'Username or password is incorrect, or stage may not be selected!',
                 Colors.redAccent);
-                break;
+            break;
           }
         }
       } catch (e) {
-        print('Exception :::::::::::: ' + e.toString());
-          showSnackBar(context, 'Some errors occurred!', Colors.black38);
+       
+        showSnackBar(context, 'Some errors occurred!', Colors.black38);
       }
     }
     setState(() {

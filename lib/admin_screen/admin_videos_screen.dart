@@ -79,12 +79,13 @@ class _AdminVideoScreenState extends State<AdminVideoScreen> {
             stream: _firestore
                 .collection(widget.collection)
                 .doc(widget.docs)
-                .collection('lessons')
-                .snapshots(),
+                .collection('lessons').orderBy('Name', descending:false ).snapshots(),
             builder: (ctx, snapshot) {
               final videoData = snapshot.data?.docs;
+
               List<String> listVideoTitle = [];
               List<String> listVideoLinks = [];
+              listVideoTitle.sort();
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const Center(child: CircularProgressIndicator());

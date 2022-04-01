@@ -15,6 +15,8 @@ class UserVideoScreen extends StatefulWidget {
       {Key? key, required this.collection, required this.docs})
       : super(key: key);
 
+
+  
   final String collection;
   final String docs;
 
@@ -42,16 +44,19 @@ class _UserVideoScreenState extends State<UserVideoScreen> {
           : null,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
+
           child: StreamBuilder<QuerySnapshot>(
             stream: _firestore
                 .collection(widget.collection)
                 .doc(widget.docs)
-                .collection('lessons')
+                .collection('lessons').orderBy('Name', descending:false)
                 .snapshots(),
             builder: (ctx, snapshot) {
               final videoData = snapshot.data?.docs;
+
               List<String> listVideoTitle = [];
               List<String> listVideoLinks = [];
+              
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const Center(child: CircularProgressIndicator());

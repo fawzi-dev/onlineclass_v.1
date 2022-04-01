@@ -48,8 +48,11 @@ class _UserMainScreenState extends State<UserMainScreen> {
         child: FutureBuilder<QuerySnapshot>(
           future: _firestore.collection(stage).get(),
           builder: (ctx, snapshots) {
+
             final data = snapshots.data?.docs;
+
             List<String> docId = [];
+            
             switch (snapshots.connectionState) {
               case ConnectionState.waiting:
                 return const Center(child: CircularProgressIndicator());

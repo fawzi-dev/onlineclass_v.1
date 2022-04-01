@@ -189,7 +189,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.tappedButton!+''+widget.userDocumentID.toString());
     return Scaffold(
       body: ModalProgressHUD(
         inAsyncCall: isSpinning,

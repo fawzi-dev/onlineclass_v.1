@@ -87,7 +87,7 @@ class _UserCardState extends State<UserCard> {
   }
 
   getData() async {
-    final users = await _firebase.collection('users').get();
+    final users = await _firebase.collection('users').orderBy('name', descending:false ).get();
     for (var user in users.docs) {
       userIds.add(user.id);
       print('Users ::::::::: ' + user.id.toString());
