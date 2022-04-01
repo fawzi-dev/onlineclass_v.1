@@ -7,7 +7,6 @@ import 'package:onlineclass/constants/constants.dart';
 import 'package:onlineclass/user_screen/user_main_screen.dart';
 import 'package:onlineclass/utlities/colors.dart';
 import 'package:onlineclass/utlities/snack_bar.dart';
-import '../utlities/drawer.dart';
 import '../utlities/getStoredString.dart';
 
 class UserLogin extends StatefulWidget {
